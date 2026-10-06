@@ -55,14 +55,14 @@ class UruzIDGenerator:
         
         Examples:
         ```
-        timestamp_id = UruzIDGenerator().generate_timestamp()
-        hex8_id = UruzIDGenerator().generate_randomcharacterarray(size=8)
-        combined_id_1 = UruzIDGenerator().combine_ids(timestamp_id, hex8_id, separator="-")
+        timestamp_id = UruzIDGenerator.generate_timestamp()
+        hex8_id = UruzIDGenerator.generate_randomcharacterarray(size=8)
+        combined_id_1 = UruzIDGenerator.combine_ids(timestamp_id, hex8_id, separator="-")
         print(combined_id_1)
         # output: 20261006124127-e9ade109
 
-        mixedletters_id = UruzIDGenerator().generate_randommixedletters(size=8)
-        numeric_id = UruzIDGenerator().generate_randomnumericarray(size=8)
+        mixedletters_id = UruzIDGenerator.generate_randommixedletters(size=8)
+        numeric_id = UruzIDGenerator.generate_randomnumericarray(size=8)
         combined_id_2 = UruzIDGenerator.combine_ids(mixedletters_id, numeric_id, separator=":")
         print(combined_id_2)
         # output: MNOUDPZA:18230553
@@ -81,7 +81,7 @@ class UruzIDGenerator:
 
         Examples:
         ```
-        timestamp_id = UruzIDGenerator().generate_timestamp()
+        timestamp_id = UruzIDGenerator.generate_timestamp()
         print(timestamp_id)
         # output: 20261006120314
         ```
@@ -103,7 +103,7 @@ class UruzIDGenerator:
 
         Examples:
         ```
-        hex8_id = UruzIDGenerator().generate_randomcharacterarray(size=8)
+        hex8_id = UruzIDGenerator.generate_randomcharacterarray(size=8)
         print(hex8_id)
         # output: a1f626ca
         ```
@@ -125,7 +125,7 @@ class UruzIDGenerator:
 
         Examples:
         ```
-        mixedletters_id = UruzIDGenerator().generate_randommixedletters(size=8)
+        mixedletters_id = UruzIDGenerator.generate_randommixedletters(size=8)
         print(mixedletters_id)
         # output: UMRRTEMG
         ```
@@ -148,7 +148,7 @@ class UruzIDGenerator:
 
         Examples:
         ```
-        numeric_id = UruzIDGenerator().generate_randomnumericarray(size=8)
+        numeric_id = UruzIDGenerator.generate_randomnumericarray(size=8)
         print(numeric_id)
         # output: 55822974
         ```
@@ -160,19 +160,19 @@ class UruzIDGenerator:
 # Modül için uygulamalı test örnekleri.
 # Bu kod bloğu, modül doğrudan çalıştırılmadığı sürece çalışmaz. 
 if __name__ == "__main__":
-    timestamp_id = UruzIDGenerator().generate_timestamp()
+    timestamp_id = UruzIDGenerator.generate_timestamp()
     print(timestamp_id)
 
-    hex8_id = UruzIDGenerator().generate_randomcharacterarray(size=8)
+    hex8_id = UruzIDGenerator.generate_randomcharacterarray(size=8)
     print(hex8_id)
 
-    mixedletters_id = UruzIDGenerator().generate_randommixedletters(size=8)
+    mixedletters_id = UruzIDGenerator.generate_randommixedletters(size=8)
     print(mixedletters_id)
 
-    numeric_id = UruzIDGenerator().generate_randomnumericarray(size=8)
+    numeric_id = UruzIDGenerator.generate_randomnumericarray(size=8)
     print(numeric_id)
 
-    combined_id_1 = UruzIDGenerator().combine_ids(timestamp_id, hex8_id, separator="-")
+    combined_id_1 = UruzIDGenerator.combine_ids(timestamp_id, hex8_id, separator="-")
     print(combined_id_1)
 
     combined_id_2 = UruzIDGenerator.combine_ids(mixedletters_id, numeric_id, separator=":")
