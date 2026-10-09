@@ -83,8 +83,29 @@ class UruzUnitTester:
 
 
     ### HELPER METHODS FOR REPORTING
-    def _index_output_list(self) -> list[tuple]:
+    def _index_output_list(self) -> list[tuple[StatusType, str]]:
         """
+        Çıktı listesindeki test sonuçlarını indeksleyerek yeni bir liste
+        döndürür.
+
+        Her bir test sonucu için sıra numarası (index), durum ('StatusType')
+        ve açıklama mesajı bir tuple olarak oluşturulur. Aynı mesaj birden
+        fazla kez geçse bile 'enumerate' sayesinde benzersiz indeksler atanır.
+
+        Returns:
+            list[tuple[int, StatusType, str]]: İndekslenmiş test sonuçlarının
+                listesi. Her eleman '(index, status, message)' formatındadır.
+
+        Examples:
+        ```
+        >>> unit_tester = UruzUnitTester()
+        >>> unit_tester.output_list.append((StatusType.SUCCESS, "Test successed."))
+        >>> unit_tester.output_list.append((StatusType.FAILURE, "Test failured."))
+        >>> indexed_output_list = unit_tester._index_outpulist()
+        >>> print(indexed_output_list)
+        [(1, StatusType.SUCCESS, 'Test success.'),
+         (2, StatusType.FAILURE, 'Test failured.')]
+        ```
         """
         return [
             # tuple = (test index - status value - message)
@@ -96,8 +117,36 @@ class UruzUnitTester:
 
 
     @staticmethod
-    def _create_summary(result_list: list[tuple]) -> str:
+    def _create_summary(
+        result_list: list[tuple[int, StatusType, str]]
+        ) -> str:
         """
+        indekslenmiş test sonuçlarını özetleyen bir string döndürür.
+
+        Her bir test sonucu için sıra numarası (index), durm('StatusType')
+        ve açıklama mesajı bir satır halinde birleştirilir. Sonuçlar satır
+        satır birleştirilerek okunabilir bir özet oluşturulur. 
+
+        Args:
+            result_list (list[tuple[int, StatusType, str]]): İndekslenmiş test
+                sonuçlarının listesi. Her eleman '(index, status, message)'
+                formatındadır. 
+
+        Returns:
+            str: Test sonuçlarının özet çıktısı. Her satırda
+            'index satatus message' formatı bulunur.
+
+        Examples:
+        ```
+        >>> unit_tester = UruzUnitTester()
+        >>> unit_tester.output_list.append((StatusType.SUCCESS, "Test successed."))
+        >>> unit_tester.output_list.append((StatusType.FAILURE, "Test failured."))
+        >>> indexed_output_list = unit_tester._index_outpulist()
+        >>> summary = unit_tester._create_summary(indexed_output_list)
+        >>> print(summary)
+        1 [OK] Test successed.
+        2 [FAIL] Test failured.
+        ```
         """         
         return "\n".join(
             # str = "test index - status value - message"
@@ -108,9 +157,9 @@ class UruzUnitTester:
 
     @staticmethod
     def _filter_results(
-        result_list: list[tuple],
+        result_list: list[tuple[int, StatusType, str]],
         status: StatusType
-    ) -> list[tuple]:
+    ) -> list[tuple[int, StatusType, str]]:
         """
         """
         return list(
