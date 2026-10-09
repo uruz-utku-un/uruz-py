@@ -49,14 +49,14 @@ class UruzUnitTester:
         indexed_output_list = self._index_output_list()
         summary_all = self._create_summary(result_list=indexed_output_list) # test özetleri
         
-        success_list = self._filter_results(
-            result_list=indexed_output_list,
+        success_list = self._filter_output_list(
+            indexed_list=indexed_output_list,
             status=StatusType.SUCCESS
         )
         summary_success = self._create_summary(success_list) # başarı özetleri
         
-        failures_list = self._filter_results(
-            result_list=indexed_output_list,
+        failures_list = self._filter_output_list(
+            indexed_list=indexed_output_list,
             status=StatusType.FAILURE
         )
         summary_failure = self._create_summary(failures_list) # başarısızlık özetleri
@@ -116,6 +116,32 @@ class UruzUnitTester:
         ]
 
 
+    
+    @staticmethod
+    def _filter_output_list(
+        indexed_list: list[tuple[int, StatusType, str]],
+        status: StatusType
+    ) -> list[tuple[int, StatusType, str]]:
+        """
+        ....
+
+        Args:
+            
+
+        Results:
+            list[tuple[int, StatusType, str]]:
+
+        Examples:
+        ```
+        ```
+        """
+        return list(
+            # tuple = (test index - status value - message)
+            (i, s, msg)
+            for i, s, msg in indexed_list if s == status
+        )
+
+
     @staticmethod
     def _create_summary(
         result_list: list[tuple[int, StatusType, str]]
@@ -152,20 +178,6 @@ class UruzUnitTester:
             # str = "test index - status value - message"
             f"{index} {status.value} {msg}"
             for index, status, msg in result_list
-        )
-
-
-    @staticmethod
-    def _filter_results(
-        result_list: list[tuple[int, StatusType, str]],
-        status: StatusType
-    ) -> list[tuple[int, StatusType, str]]:
-        """
-        """
-        return list(
-            # tuple = (test index - status value - message)
-            (i, s, msg)
-            for i, s, msg in result_list if s == status
         )
 
 
