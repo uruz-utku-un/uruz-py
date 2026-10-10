@@ -213,8 +213,8 @@ class UruzUnitTester:
         Examples:
         ```
         >>> unit_tester = UruzUnitTester()
-        >>> unit_tester.output_list.append((StatusType.SUCCESS, "Test başarıyla geçti."))
-        >>> unit_tester.output_list.append((StatusType.FAILURE, "Test başarısız oldu."))
+        >>> unit_tester.output_list.append((StatusType.SUCCESS, "Test successed."))
+        >>> unit_tester.output_list.append((StatusType.FAILURE, "Test failured."))
         >>> stats = unit_tester._claculate_stats()
         >>> print(stats)
         {'total': 2, 'ok': 1, "fail": 1, 'success_rate': 50.0, 'failure_rate': 50.0}
