@@ -88,13 +88,13 @@ class UruzUnitTester:
         Çıktı listesindeki test sonuçlarını indeksleyerek yeni bir liste
         döndürür.
 
-        Her bir test sonucu için sıra numarası (index), durum ('StatusType')
+        Her bir test sonucu için sıra numarası (index), durum (`StatusType`)
         ve açıklama mesajı bir tuple olarak oluşturulur. Aynı mesaj birden
         fazla kez geçse bile 'enumerate' sayesinde benzersiz indeksler atanır.
 
         Returns:
             list[tuple[int, StatusType, str]]: İndekslenmiş test sonuçlarının
-                listesi. Her eleman '(index, status, message)' formatındadır.
+                listesi. Her eleman `(index, status, message)` formatındadır.
 
         Examples:
         ```
@@ -123,16 +123,30 @@ class UruzUnitTester:
         status: StatusType
     ) -> list[tuple[int, StatusType, str]]:
         """
-        ....
+        İndesklenmiş çıktı listesindeki test sonuçlarını verilen statüye göre
+        filtreler.
 
         Args:
-            
+            indexed_list (list[tuple[int, StatusType, str]): İndekslenmiş test
+                sonuçlarının listesi. Her eleman `(index, status, message)`
+                formatındadır.
+            status (StatusType): Filtrelenecek durum
+            (örneğin `StatusType.SUCCESS` veya `StatusType.FAILURE`).
 
         Results:
-            list[tuple[int, StatusType, str]]:
+            list[tuple[int, StatusType, str]]: Belirtilen statüye sahip test
+            sonuçlarının listesi. Her eleman `(index, status, message)`
+            formatındadır.
 
         Examples:
         ```
+        >>> unit_tester = UruzUnitTester()
+        >>> unit_tester.output_list.append((StatusType.SUCCESS, "Test successed."))
+        >>> unit_tester.output_list.append((StatusType.FAILURE, "Test failured."))
+        >>> indexed_output_list = unit_tester._index_outpulist()
+        >>> success_result_list = unit_tester._filter_output_list(indexed_output_list, StatusType.SUCCESS)
+        >>> print(success_result_list)
+        [(1, StatusType.SUCCESS, 'Test successed.')]
         ```
         """
         return list(
@@ -149,13 +163,13 @@ class UruzUnitTester:
         """
         indekslenmiş test sonuçlarını özetleyen bir string döndürür.
 
-        Her bir test sonucu için sıra numarası (index), durm('StatusType')
+        Her bir test sonucu için sıra numarası (index), durum (`StatusType`)
         ve açıklama mesajı bir satır halinde birleştirilir. Sonuçlar satır
         satır birleştirilerek okunabilir bir özet oluşturulur. 
 
         Args:
             result_list (list[tuple[int, StatusType, str]]): İndekslenmiş test
-                sonuçlarının listesi. Her eleman '(index, status, message)'
+                sonuçlarının listesi. Her eleman `(index, status, message)`
                 formatındadır. 
 
         Returns:
@@ -185,15 +199,25 @@ class UruzUnitTester:
         """
         Çıktı listesindeki test sonuçlarına göre istatistik hesaplar.
 
-        Returns:
-            dict: Toplam test sayısı, başarılı test sayısı,
-            başarısız test sayısı, başarı oranı ve hata oranını
-            içeren sözlük.
+        Toplam test sayısını, başarılı başarısız test sayısını,
+        ayrıca başarı ve hata oranlarını yüzdesel olarak döndürür.
 
+        Returns:
+            dict: İstatistikleri içeren sözlük. Anahtarlar: 
+                - "total" (int):
+                - "ok" (int):
+                - "fail" (int): 
+                - "success_rate" (float): Başarı oranı (%)
+                - "failure_rate" (float): Hata oranı (%).
+        
         Examples:
         ```
-        ...
-        # output:
+        >>> unit_tester = UruzUnitTester()
+        >>> unit_tester.output_list.append((StatusType.SUCCESS, "Test başarıyla geçti."))
+        >>> unit_tester.output_list.append((StatusType.FAILURE, "Test başarısız oldu."))
+        >>> stats = unit_tester._claculate_stats()
+        >>> print(stats)
+        {'total': 2, 'ok': 1, "fail": 1, 'success_rate': 50.0, 'failure_rate': 50.0}
         ```
         """
 
@@ -203,16 +227,19 @@ class UruzUnitTester:
             Oran hesaplayan yardımcı fonksiyon.
 
             Args:
-                numerator (int): Pay (başarılı veya hatalı testlerin sayısı).
+                numerator (int): Pay
+                    (örneğin başarılı veya hatalı testlerin sayısı).
                 denominator (int): Payda (toplam test sayısı).
 
             Returns:
-                float: Oran yüzdesi.
+                float: Oran yüzdesi. Eğer payda sıfırsa 0 döner.
             
             Examples:
             ```
-            ...
-            # output:
+            >>> calculate_rate(3, 5)
+            60.0
+            >>> calculate_rate(0, 0)
+            0 
             ```
             """
             return numerator / denominator * 100 if denominator > 0 else 0
@@ -232,15 +259,25 @@ class UruzUnitTester:
         }
 
 
-    ### SUCCESS and FAILURE TESTS  ###
     def _analyze_and_append_status(self, boolean: bool, msg: str) -> None:
         """
-        Koşulu değerlendirir, sonucu bir 'tuple' nesnesi olarak oluşturur ve
+        Koşulu değerlendirir, sonucu bir `tuple` olarak oluşturur ve
         çıktı listesine ekler.
 
         Args:
             boolean (bool): Test edilecek koşulun mantıksal sonucu.
             message (str): Test açıklaması.
+
+        Returns:
+            None
+
+        Examples:
+        ```
+        >>> unit_tester = UruzUnitTester()
+        >>> unit_tester._analyze_and_append_status(True, "The condition is true.")
+        >>> print(unit_tester.output_list)
+        [(StatusType.SUCCESS, 'The condition is true.')]
+        ```
         """
         result = (
             StatusType.SUCCESS, msg
@@ -250,20 +287,41 @@ class UruzUnitTester:
         self.output_list.append(result)
 
 
+    ### SUCCESS and FAILURE TESTS  ###
     def assert_equal(self, value, expected, message: str) -> None:
         """
         Elde edilen değer ve beklenen değerin eşit olup olmadığını
-        test eder ve sonucu çıktı listesine ekler.
+        test eder.
+         
+        Sonucu değerlendirir ve çıktı listesine ekler.
 
         Args:
             value: Test edilecek değer.
             expected: Beklenen değer.
             message (str): Test açıklaması.
+
+        Returns:
+            None
         
         Examples:
         ```
-        ...
-        # output:
+        >>> unit_tester = UruzUnitTester()
+        >>> unit_tester.assert_equal(5, 5, "The obtained value is equal to the expected value (5).")
+        >>> print(unit_tester.output_list)
+        [(StatusType.SUCCESS, "The obtained value is equal to the expected value (5).")]
+        >>> print(unit_tester)
+        # Summary
+        1 [OK] The obtained value is equal to the expected value (5).
+        -------------------------------------------------------------------------------
+        # Success
+        1 [OK] The obtained value is equal to the expected value (5).
+        -------------------------------------------------------------------------------
+        # Failures
+        None
+        -------------------------------------------------------------------------------
+        # Result
+        Total: 1 | Succes: 1 | Failure: 0 | Success Rate: 100.00% | Failure Rate: 0.00%
+        -------------------------------------------------------------------------------
         ```
         """
         condition = value == expected
@@ -272,8 +330,9 @@ class UruzUnitTester:
 
     def assert_true(self, condition, message: str) -> None:
         """
-        Bir koşulun doğru olup olmadığını test eder ve sonucu çıktı listesine
-        ekler.
+        Bir koşulun doğru olup olmadığını test eder.
+
+        Sonucu değerlendirir ve çıktı listesine ekler.
 
         Args:
             condition: Test edilecek koşul.
@@ -281,8 +340,28 @@ class UruzUnitTester:
 
         Examples:
         ```
-        ...
-        # output:
+        >>> unit_tester = UruzUnitTester()
+        >>> unit_tester.assert_true("abc".isalpha(), "The obtained value consists solely of letters.")
+        >>> unit_tester.assert_true("abc-123".isalpha(), "The obtained value consists solely of letters.")
+        >>> print(unit_tester.output_list)
+        [(
+        StatusType.SUCCESS, 'The obtained value consists solely of letters.',
+        StatusType.FAILURE, 'The obtained value consists solely of letters.'
+        )]
+        >>> print(unit_tester)
+        # Summary
+        1 [OK] The obtained value consists solely of letters.
+        2 [FAIL] 'The obtained value consists solely of letters.'
+        -------------------------------------------------------------------------------
+        # Success
+        1 [OK] The obtained value consists solely of letters.
+        -------------------------------------------------------------------------------
+        # Failures
+        2 [FAIL] 'The obtained value consists solely of letters.'
+        -------------------------------------------------------------------------------
+        # Result
+        Total: 2 | Succes: 1 | Failure: 1 | Success Rate: 50.00% | Failure Rate: 50.00%
+        -------------------------------------------------------------------------------
         ```
         """
         self._analyze_and_append_status(boolean=condition, msg=message)
@@ -316,3 +395,26 @@ if __name__ == "__main__":
     )
 
     print(unit_tester)
+
+    # output:
+    """
+    # Summary
+    1 [OK] 'x=24', x = 24
+    2 [FAIL] 'x=23', x = 24
+    3 [OK] '24' consists solely of numeric characters.
+    4 [OK] 'Kurt' consists solely of text characters.
+    5 [FAIL] 'Kurt-24' consists solely of numeric or text characters.
+    -------------------------------------------------------------------------------
+    # Success
+    1 [OK] 'x=24', x = 24
+    3 [OK] '24' consists solely of numeric characters.
+    4 [OK] 'Kurt' consists solely of text characters.
+    -------------------------------------------------------------------------------
+    # Failures
+    2 [FAIL] 'x=23', x = 24
+    5 [FAIL] 'Kurt-24' consists solely of numeric or text characters.
+    -------------------------------------------------------------------------------
+    # Result
+    Total: 5 | Succes: 3 | Failure: 2 | Success Rate: 60.00% | Failure Rate: 40.00%
+    -------------------------------------------------------------------------------
+    """
