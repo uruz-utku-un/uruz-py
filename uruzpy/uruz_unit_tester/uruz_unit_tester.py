@@ -15,13 +15,25 @@ class UruzUnitTester:
     bu liste üzerinden özet, istatistik ve raporlama işlemleri yapılmasına imkan tanır.
 
     Methods:
-        - __str__()
-
-        - @instancemethod, calculate_stats(self, ...): 
-            - @capsulemethod, 
-        - 
-
-        - 
+        - `self`, `__str__()`: Sınıf örneği yazdırıldığında test sonuçlarını
+            ve istatistikleri okunabilir bir formatta döndürür.
+        - `self`,  `_index_output_list()`: Çıktı listesindeki test sonuçlarını
+            indeksleyerek yeni bir liste döndürür.
+        - `staticmethod`, `_filter_output_list(...)`: İndesklenmiş çıktı
+            listesindeki test sonuçlarını verilen statüye göre filtreler.
+        - `staticmethod`, `_create_summary(...)`: indekslenmiş test sonuçlarını
+            özetleyen bir string döndürür.
+        - `self`, _calculate_stats(): Çıktı listesindeki test sonuçlarına göre
+            istatistik hesaplar.
+            - `capsuled`, `calculate_rate(...)`: Oran hesaplayan yardımcı
+                fonksiyon.
+        - `self`, `_analyze_and_append_status(...)`: Koşulu değerlendirir,
+            sonucu bir `tuple` olarak oluşturur ve çıktı listesine ekler.
+        - `self`, `assert_equal(...)`: Elde edilen değer ve beklenen değerin
+            eşit olup olmadığını test eder. Sonucu değerlendirir ve çıktı
+            listesine ekler.
+        - `self`, `assert_true(...)`: Bir koşulun doğru olup olmadığını test
+            eder. Sonucu değerlendirir ve çıktı listesine ekler.
     """
 
 
@@ -34,14 +46,35 @@ class UruzUnitTester:
         Sınıf örneği yazdırıldığında test sonuçlarını ve istatistikleri
         okunabilir bir formatta döndürür.
 
+        Test özetleri, başarılı ve başarısız sonuçlar ayrı ayrı listelenir.
+        Ayrıca toplam test sayısı, başarı/başarısızlık oranları yüzdesel
+        olarak raporlanır.
+
         Returns:
             str: Test sonuçlarınının ve başarı/başarısızlık oranlarının
-                özet çıktısı.
+                özet çıktısı. Çıktı; summary, Success, Failures ve Result
+                bölümlerinden oluşur.
         
         Examples:
         ```
-        ...
-        # output:
+        >>> unit_tester = UruzUnitTester()
+        >>> unit_tester.assert_equal(5, 5, "The obtained value is equal to the expected value (5).")
+        >>> unit_tester.assert_true("abc".isalpha(), "The obtained value consists solely of letters.")
+        >>> print(unit_tester)
+        # Summary
+        1 OK The obtained value is equal to the expected value (5).
+        2 OK The obtained value consists solely of letters.
+        -------------------------------------------------------------------------------
+        # Success
+        1 OK The obtained value is equal to the expected value (5).
+        2 OK The obtained value consists solely of letters.
+        -------------------------------------------------------------------------------
+        # Failures
+        None
+        -------------------------------------------------------------------------------
+        # Result
+        Total: 2 | Succes: 2 | Failure: 0 | Success Rate: 100.00% | Failure Rate: 0.00%
+        -------------------------------------------------------------------------------
         ```
         """
         separator = f"\n{79 * "-"}"
