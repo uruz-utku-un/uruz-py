@@ -367,8 +367,8 @@ class UruzUnitTester:
         self._analyze_and_append_status(boolean=condition, msg=message)
 
 
-# Modül için uygulamalı test örnekleri.
-# Bu kod bloğu, modül doğrudan çalıştırılmadığı sürece çalışmaz. 
+# Practical test examples for the module.
+# This code block does not run unless the module is executed directly.
 if __name__ == "__main__":
     unit_tester = UruzUnitTester()
 
