@@ -1,0 +1,3 @@
+- Docstring Level:
+  - TR: %100
+  - EN: %0
